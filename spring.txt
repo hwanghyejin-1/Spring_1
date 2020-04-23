@@ -1,0 +1,34 @@
+#spring
+
+1. DB 생성
+   - dbeaver
+   
+CREATE TABLE str_product(
+   PNO NUMBER NULL,
+   TITLE varchar2(200) NOT NULL,
+   WRITER varchar2(100) NOT NULL,
+   CONTENT varchar2(2000) NOT NULL,
+   REG8 DATE DEFAULT sysdate,
+   MOD8 DATE DEFAULT sysdate,
+   READCOUNT NUMBER DEFAULT 0,
+   IMGFILE VARCHAR2(2000)
+);
+
+ALTER TABLE STR_PRODUCT
+ADD CONSTRAINT STR_PRODUCT_PK PRIMARY KEY(PNO)
+ENABLE;
+
+CREATE SEQUENCE SEQENCE_PRODUCT INCREMENT BY 1 MINVALUE 0 NOCACHE NOORDER;
+
+2. src/main/java 패키지 생성
+ - com.myweb.ctrl
+ - com.myweb.domain
+ - com.myweb.persistence
+ - com.myweb.service
+ 
+ (1) com.myweb.domain -> ProductVO 생성
+    - VO 역할: 각 계층간 데이터 교환을 위한 자바 객체
+ (2) com.myweb.persistence ->ProductDAO 생성
+    - DAO 역할: DB를 사용해 데이터를 조회하거나 조작하는 기능을 전담하도록 만든 객체
+ (3) com.myweb.service ->ProductService 생성
+     - Service 역할: DAO가 DB에서 받아온 데이터를 전달받아 가공
