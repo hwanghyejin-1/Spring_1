@@ -1,0 +1,524 @@
+Spring 설치 후 기본 Setting
+
+
+1. 버전 변경
+ : Spring Legacy Project 생성 후, 프로젝트 오른쪽 마우스 -> Properties -> Project Facets -> dynamic web module -> 원하는대로 버전 변경
+  (Java 1.8로 변경) 
+
+2. pom.xml 수정
+(1) 버전 일치 확인
+=============================================================================================
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion> 
+=============================================================================================
+=> <modelVersion>4.0.0</modelVersion>  4.0.0과 위쪽 https://maven.apache.org/maven-v4_0_0.xsd 이부분의 4.0.0 (버전)은 같아야함
+
+(2) 코드 수정
+=============================================================================================
+<!-- Spring -->
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-context</artifactId>
+	<version>${org.springframework-version}</version>
+</dependency>
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-webmvc</artifactId>
+	<version>${org.springframework-version}</version>
+</dependency>
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-test</artifactId>
+	<version>${org.springframework-version}</version>
+</dependency>
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-tx</artifactId>
+	<version>${org.springframework-version}</version>
+</dependency>
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-jdbc</artifactId>
+	<version>${org.springframework-version}</version>
+</dependency>
+=============================================================================================
+=> 
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-webmvc</artifactId>
+	<version>${org.springframework-version}</version>
+</dependency> 복사 세번 후, 각각spring-test, spring-tx, spring-jdbc 이름, 내용 바꾸기
+=> spring-context, spring-webmvc는 프로젝트 생성 시에 존재하고, spring-test, spring-tx, spring-jdbc는 추가 생성
+=> spring-tx, spring-jdbc는 MyBatis 관련 라이브러리를 추가할때 필요하며.
+    스프링에서 데이터베이스 처리와 트랜잭션 처리 역할을 함 (해당 라이브러리들은 MyBatis와 무관하게 보이지만 추가하지 않은 경우 에러 발생)
+
+3. 필요한 것 다운로드
+
+★ Google -> mavenrespository -> 홈페이지 들어가기 전, 글자 치는 란에 springjdbc 입력 -> 페이지 클릭 -> 각종 버전들 나옴
+★(1)~(14)에 적어놓은 <version>수정도 확인하기 
+★ <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver --> 이런 URL 주석은 지워도 상관 없음
+
+ (1) 검색란에 aspectjweaver 검색 -> aspectJ weaver-> 1.9.0 다운로드 (밑에 그냥 클릭하면 소스 자동복사 됨 밑에도 동일)
+====================================================
+<!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+<dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjweaver</artifactId>
+    <version>${org.aspectj-version}</version>
+</dependency>
+====================================================
+
+ (2) log4j-core ->  Apache Log4j Core ->2.11.2
+ ★<version>은 <version>${org.log4j-version}</version>으로 수정
+====================================================
+<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+<dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-core</artifactId>
+    <version>${org.log4j-version}</version>
+</dependency>
+====================================================
+
+ (3) log4j-slf4j-impl-> Apache Log4j SLF4J Binding->2.11.2
+★<version>은 <version>${org.log4j-version}</version>으로 수정
+====================================================
+<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl -->
+<dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-slf4j-impl</artifactId>
+    <version>${org.log4j-version}</version>
+    <scope>test</scope>
+</dependency>
+====================================================
+
+ (4) org.bgee.log4jdbc-log4j2->Log4Jdbc Log4j2 JDBC 4->1.16
+★ 버전 수정 없음
+====================================================
+<!-- https://mvnrepository.com/artifact/org.bgee.log4jdbc-log4j2/log4jdbc-log4j2-jdbc4 -->
+<dependency>
+    <groupId>org.bgee.log4jdbc-log4j2</groupId>
+    <artifactId>log4jdbc-log4j2-jdbc4</artifactId>
+    <version>1.16</version>
+</dependency>
+====================================================
+ 
+<!--DB-->
+(5) hikaricp-->HikariCP-> 최신버전 받아도 상관 없음
+★ 버전 수정 없음
+====================================================
+<!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
+<dependency>
+    <groupId>com.zaxxer</groupId>
+    <artifactId>HikariCP</artifactId>
+    <version>3.4.3</version>
+</dependency>
+====================================================
+
+(6) mybatis-> mybatis->3.4.6
+★ 버전 수정 없음
+====================================================
+<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis</artifactId>
+    <version>3.4.6</version>
+</dependency>
+====================================================
+
+(7) (6)에서 뒤로가기 두번 해서 MyBatis Spring->1.3.2
+★ 버전 수정 없음
+====================================================
+<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis-spring</artifactId>
+    <version>1.3.2</version>
+</dependency>
+====================================================
+
+ (8) mysql-connector->MySQL Connector/J->5.대 아무거나
+★ 버전 수정 없음
+====================================================
+<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>5.1.49</version>
+</dependency>
+====================================================
+
+<!-- Util -->
+ (9)lombok-> Project Lombok->1.18.10
+★ 버전 수정 없음
+====================================================
+<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>1.18.10</version>
+    <scope>provided</scope>
+</dependency>
+====================================================
+
+(10) jackson-databind-> Jackson Databind-> 2.10.0
+★ <version>은 <version>${fasterxml.jackson-version}</version>으로 수정
+====================================================
+<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>${fasterxml.jackson-version}</version>
+</dependency>
+====================================================
+
+(11)  jackson-dataformat-xml->Jackson Dataformat XML->2.10.0
+★ <version>은  <version>${fasterxml.jackson-version}</version>으로 수정
+==================================================================
+<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml -->
+<dependency>
+    <groupId>com.fasterxml.jackson.dataformat</groupId>
+    <artifactId>jackson-dataformat-xml</artifactId>
+    <version>${fasterxml.jackson-version}</version>
+</dependency>
+==================================================================
+
+(12)net.coobird-> Thumbnailator->0.4.8
+★ 버전 수정 없음
+====================================================
+<!-- https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
+<dependency>
+    <groupId>net.coobird</groupId>
+    <artifactId>thumbnailator</artifactId>
+    <version>0.4.8</version>
+</dependency>
+====================================================
+
+<!-- Spring Security -->
+(13) spring-security->. Spring Security Core->4.2.11
+★ <version>은  <version>${spring.security-version}</version>으로 수정
+==============================================================
+<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-core</artifactId>
+    <version>${spring.security-version}</version>
+</dependency>
+==============================================================
+하고 같은거 세번 복사해서 <artifactId>,<version> 수정
+==============================================================
+<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-core</artifactId>
+    <version>${spring.security-version}</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-web</artifactId>
+    <version>${spring.security-version}</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-config</artifactId>
+    <version>${spring.security-version}</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-taglibs</artifactId>
+    <version>${spring.security-version}</version>
+</dependency>
+==============================================================
+
+<!-- Schedular -->
+(14) org.quartz->Quartz job-> 아무거나 받아도 됨
+★ <version>은 <version>${org.quartz-scheduler}</version>으로 수정
+====================================================
+<!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz-jobs -->
+<dependency>
+    <groupId>org.quartz-scheduler</groupId>
+    <artifactId>quartz-jobs</artifactId>
+    <version>${org.quartz-scheduler}</version>
+</dependency>
+====================================================
+(15) (14)와 같은거 한번 복사해서 이름 jobs만 지워주기
+====================================================
+<!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz-jobs -->
+<dependency>
+    <groupId>org.quartz-scheduler</groupId>
+    <artifactId>quartz</artifactId>
+    <version>${org.quartz-scheduler}</version>
+</dependency>
+=============================================================================================
+
+★ pom.xml 코드
+=================================================================
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>kr.co</groupId>
+	<artifactId>myweb</artifactId>
+	<name>SpringBoard_02_Basic</name>
+	<packaging>war</packaging>
+	<version>1.0.0-BUILD-SNAPSHOT</version>
+	<properties>
+		<java-version>1.8</java-version>
+		<org.springframework-version>4.3.22.RELEASE</org.springframework-version>
+		<org.aspectj-version>1.9.5</org.aspectj-version>
+		<org.log4j-version>2.11.2</org.log4j-version>
+		<org.slf4j-version>1.7.25</org.slf4j-version>
+		<spring.security-version>4.2.11.RELEASE</spring.security-version>
+		<org.quartz-version>2.3.2</org.quartz-version>
+		<fasterxml.jackson-version>2.10.0</fasterxml.jackson-version>
+	</properties>
+	<dependencies>
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+
+		<!-- AspectJ -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>${org.aspectj-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${org.aspectj-version}</version>
+		</dependency>
+
+		<!-- Logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${org.slf4j-version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${org.log4j-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${org.log4j-version}</version>
+			<exclusions>
+				<!-- Exclude Commons Logging in favor of log4j-core -->
+				<exclusion>
+					<groupId>org.apache.logging.log4j</groupId>
+					<artifactId>log4j-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.bgee.log4jdbc-log4j2</groupId>
+			<artifactId>log4jdbc-log4j2-jdbc4</artifactId>
+			<version>1.16</version>
+		</dependency>
+
+		<!-- @Inject -->
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+
+		<!-- Servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- DB -->
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>3.4.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.4.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.48</version>
+		</dependency>
+
+		<!-- Utils -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.10</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${fasterxml.jackson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+			<version>${fasterxml.jackson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>0.4.8</version>
+		</dependency>
+
+		<!-- Spring Security -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring.security-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring.security-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring.security-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>${spring.security-version}</version>
+		</dependency>
+
+		<!-- Scheduler -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${org.quartz-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz-jobs</artifactId>
+			<version>${org.quartz-version}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<additionalProjectnatures>
+						<projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+					</additionalProjectnatures>
+					<additionalBuildcommands>
+						<buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
+					</additionalBuildcommands>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<compilerArgument>-Xlint:all</compilerArgument>
+					<showWarnings>true</showWarnings>
+					<showDeprecation>true</showDeprecation>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<configuration>
+					<mainClass>org.test.int1.Main</mainClass>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+=============================================================================================
+
+3. src/main/resources에서 log4j.xml -> 이름 log4j2.xml로 수정
+4. src/main/resources에서 new file -> log4jdbc.log4j2.properties 이름으로 생성
+=> log4jdbc.spylogdelegator.name=net.sf.log4jdbc.log.slf4j.Slf4jSpyLogDelegator 코드 넣기
+
+5. src/main/resources에서 other file ->  MybatisConfig.xml 생성 -> 코드 넣기
+=====================================
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+</configuration> 
+=====================================
+
+6. oracle database 다운로드
+https://www.oracle.com/downloads/  -> 페이지 내리다보면 Drivers and Utilities에서 jdbc drivers -> oracle database 18c drivers -> ojdbc8.jar 다운 
+-> ojdbc8.jar파일 C:\Program Files\Java\jdk1.8.0_251\lib에 넣기 ->  원하는 프로젝트 -> Properties->java build path -> library 
+-> Add Externals Jars ->  C:\Program Files\Java\jdk1.8.0_251\lib경로의 ojdbc6.jar 클릭 -> apply ->regerenced libraries생성됨 -> 그안에 ojdbc8.jar 있음
+

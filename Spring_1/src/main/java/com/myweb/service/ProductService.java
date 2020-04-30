@@ -9,6 +9,5 @@ public interface ProductService {
 	public List<ProductVO> list();
 	public ProductVO detail(Integer pno);
 	public void modify(ProductVO pvo);
-	public void remove(Integer pno);
-	
+	public void remove(Integer pno);	
 }
