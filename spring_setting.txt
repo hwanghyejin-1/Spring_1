@@ -1,11 +1,75 @@
 Spring 설치 후 기본 Setting
 
+1. 페이지 Setting
 
-1. 버전 변경
+1. Windows -> Preferences -> Encoding 입력 
+(1) General 
+   1) Content Types -> Java Class File과 Text(두 군데) -> Default encoding에 UTF-8넣기 -> Update
+   2)Workspace -> Text file encoding(왼쪽 아래부분) -> Other -> UTF-8, 
+	       ->  New text file line delimiter(오른쪽 아래부분) -> Other -> Unix -> Apply
+(2) Web
+  1) CSS Files, HTML Files, JSP Files (세개 모두) -> Encoding -> ISO 10646/Unicode(UTF-8) 선택 -> Apply
+
+2. (선택)글자크기 조정
+Windows -> Preferences -> General -> Appearance -> Colors and Fonts 
+ -> Basic -> Text Font -> Edit 에서 글꼴 자유롭게 수정
+
+3. (선택)서버 실행 시 구현되는 페이지 선택
+Windows -> Web Browser 에서 선택
+
+4. Windows -> Preferences -> Web -> JSP File -> Editor ->Templates 
+  ->Name에서 New JSP File (html)-> Edit
+   1) Name: New JSP File (html5)로 수정
+   2) Descriptrion: JSP with html5 markup로 수정
+   3) pattern:
+<%@ page language="java" contentType="text/html; charset=${encoding}"
+    pageEncoding="${encoding}"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=${encoding}">
+<title>Insert title here</title>
+</head>
+<body>
+${cursor}
+</body>
+</html> 수정
+
+5. (선택) Java-> Code Style -> Code Templates -> Code 
+ 1) New Java files -> edit ->Pattern
+${filecomment}
+${package_declaration}
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+${typecomment}
+${type_declaration} 수정
+
+ 2) Class Body ->Edit 
+private static final Logger log = LoggerFactory.getLogger(여기 마우스 놓고.class);----> insert Variable...-> type_name 누르고 -> apply
+
+6.(선택이지만 하면 간편) Window -> Perspective-> Customize Perspective -> Shortcuts ( 1)~5) 부분만 체크)
+ 1) General -> File, Folder, Untitled Text File
+ 2) Java -> class, Interface, Java Project, Package, Source Folder
+ 3) Spring -> Spring Legacy Project
+ 4) Web -> JSP File
+ 5) XML -> XML File 
+===================================================================================================
+7. 버전 변경
  : Spring Legacy Project 생성 후, 프로젝트 오른쪽 마우스 -> Properties -> Project Facets -> dynamic web module -> 원하는대로 버전 변경
   (Java 1.8로 변경) 
 
-2. pom.xml 수정
+★ src/main/java : 개발하는 Java 코드
+★ src/main/resources : 서버가 실행될 때 필요한 파일들의 경로
+★ src/test/java: 테스트 전용 경로
+★ src/test/resources: 테스트 시에만 사용되는 파일의 경로
+★ spring: 스프링 설정 파일의 경로
+★ views : JSP 파일 경로
+★ pom.xml : Maven 설정 파일
+
+8. pom.xml 수정
 (1) 버전 일치 확인
 =============================================================================================
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -53,7 +117,7 @@ Spring 설치 후 기본 Setting
 => spring-tx, spring-jdbc는 MyBatis 관련 라이브러리를 추가할때 필요하며.
     스프링에서 데이터베이스 처리와 트랜잭션 처리 역할을 함 (해당 라이브러리들은 MyBatis와 무관하게 보이지만 추가하지 않은 경우 에러 발생)
 
-3. 필요한 것 다운로드
+9. 필요한 것 다운로드
 
 ★ Google -> mavenrespository -> 홈페이지 들어가기 전, 글자 치는 란에 springjdbc 입력 -> 페이지 클릭 -> 각종 버전들 나옴
 ★(1)~(14)에 적어놓은 <version>수정도 확인하기 
@@ -266,7 +330,7 @@ Spring 설치 후 기본 Setting
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>kr.co</groupId>
 	<artifactId>myweb</artifactId>
-	<name>SpringBoard_02_Basic</name>
+	<name>Spring01</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
@@ -503,11 +567,11 @@ Spring 설치 후 기본 Setting
 </project>
 =============================================================================================
 
-3. src/main/resources에서 log4j.xml -> 이름 log4j2.xml로 수정
-4. src/main/resources에서 new file -> log4jdbc.log4j2.properties 이름으로 생성
+10. src/main/resources에서 log4j.xml -> 이름 log4j2.xml로 수정
+11. src/main/resources에서 new file -> log4jdbc.log4j2.properties 이름으로 생성
 => log4jdbc.spylogdelegator.name=net.sf.log4jdbc.log.slf4j.Slf4jSpyLogDelegator 코드 넣기
 
-5. src/main/resources에서 other file ->  MybatisConfig.xml 생성 -> 코드 넣기
+12. src/main/resources에서 other file ->  MybatisConfig.xml 생성 -> 코드 넣기
 =====================================
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
@@ -517,8 +581,122 @@ Spring 설치 후 기본 Setting
 </configuration> 
 =====================================
 
-6. oracle database 다운로드
+13. oracle database 다운로드
 https://www.oracle.com/downloads/  -> 페이지 내리다보면 Drivers and Utilities에서 jdbc drivers -> oracle database 18c drivers -> ojdbc8.jar 다운 
--> ojdbc8.jar파일 C:\Program Files\Java\jdk1.8.0_251\lib에 넣기 ->  원하는 프로젝트 -> Properties->java build path -> library 
--> Add Externals Jars ->  C:\Program Files\Java\jdk1.8.0_251\lib경로의 ojdbc6.jar 클릭 -> apply ->regerenced libraries생성됨 -> 그안에 ojdbc8.jar 있음
+ (1) ojdbc8.jar파일 C:\Program Files\Java\jdk1.8.0_251\lib에 넣기 ->  원하는 프로젝트 -> Properties->java build path -> library 
+    -> Add Externals Jars ->  C:\Program Files\Java\jdk1.8.0_251\lib경로의 ojdbc6.jar 클릭 -> apply ->regerenced libraries생성됨 -> 그안에 ojdbc8.jar 있음
+ (2)원하는 프로젝트 -> Properties -> Deployment Assembly -> Add -> Java Build Path Entries -> objdbc8.jar -> Apply 
 
+14. web.xml 코드 수정
+-> </servlet-mapping> 코드 뒤에 붙여넣기
+==========================================================================
+<filter>
+  	<filter-name>encoding</filter-name>
+  	<filter-class>org.springframework.web.filter.characterEncodingFilter</filter-class>
+  	<init.param>
+  		<param-name>encoding</param-name>
+  		<param-value>UTF-8</param-value>
+  	</init.param>
+  </filter>
+  <filter-mapping>
+  	<filter-name>encoding</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+==========================================================================
+
+15. root-context.xml 수정 --> 수정 시 404에러 (해결하기!)
+<원래 코드>
+=================================================================================================
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+		
+</beans>
+=================================================================================================
+<수정할 코드>
+========================================================================================
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+
+xsi:schemaLocation이 부분에
+"http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd 
+http://www.springframework.org/shema/contenxt http://www.springframework.org/schema/context/spring-context-4.3xsd"
+
+코드 추가하고,
+<!-- Root Context: defines shared resources visible to all other web components --> 밑에
+
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
+			destroy-method="close">
+			<property name="driveClassName"
+					  value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+			<property name="jdbcUrl"
+					  value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE"></property>
+			<property name="username" value="springdb"></property>
+			<property name="password" value="springuser"></property>
+	</bean>
+			
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation"
+			value="classpath:/MybatisConfig.xml"></property>
+		<property name="mapperLocations"
+			value="classpath:mappers/**/*Mapper.xml"></property>
+	</bean>
+	<bean id="sqlSession"
+		class="org.mybatis.spring.SqlSessionTemplate"
+		destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory"
+			ref="sqlSessionFactory"></constructor-arg>
+	</bean>
+	<context:component-scan
+		base-package="com.myweb.persistence" />
+	<context:component-scan
+		base-package="com.myweb.service" />
+			
+</beans> 코드 추가
+========================================================================================
+★ root-context.xml 코드
+========================================================================================
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
+		destroy-method="close">
+		<property name="driverClassName"
+			value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+		<property name="jdbcUrl"
+			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE"></property>
+		<property name="username" value="springdb"></property>
+		<property name="password" value="springuser"></property>
+	</bean>
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation"
+			value="classpath:/MybatisConfig.xml"></property>
+		<property name="mapperLocations"
+			value="classpath:mappers/**/*Mapper.xml"></property>
+	</bean>
+	<bean id="sqlSession"
+		class="org.mybatis.spring.SqlSessionTemplate"
+		destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory"
+			ref="sqlSessionFactory"></constructor-arg>
+	</bean>
+	<context:component-scan
+		base-package="com.myweb.persistence" />
+	<context:component-scan
+		base-package="com.myweb.service" />
+</beans>
+========================================================================================

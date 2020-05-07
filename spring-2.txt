@@ -1,0 +1,162 @@
+write.jsp시작
+1. write.jsp 생성(views -> Product)
+ -> temp.jsp 열어둔 상태에서 File-> save as로  생성하면 코드 내용 그대로 나타남
+=========================================================================
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+  pageEncoding="UTF-8"%>
+<jsp:include page="../00_header.jsp"></jsp:include>
+<jsp:include page="../10_nav.jsp"></jsp:include>
+
+<h2>상품 등록하기</h2>
+<form method="post">
+	<div class="form-group">
+	<label for="title">Title</label>
+	<input type="text" class="form-control" placeholder="상품명" id="title" name="title">
+	</div>
+	
+	<div class="form-group">
+	<label for="title">Writer</label>
+	<input type="text" class="form-control" placeholder="등록자" id="writer" name="writer">
+	</div>
+	
+	<div class="form-group">
+	<label for="title">File</label>
+	<input type="text" class="form-control" placeholder="파일등록예정" id="imgfile" name="imgfile">
+	</div>
+	
+	<div class="form-group">
+	<label for="content">Content</label>
+	<textarea class="form-control" rows="5" id="content" name="content"></textarea>
+	</div>
+	<button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<jsp:include page="../90_footer.jsp"></jsp:include>
+=========================================================================
+
+
+2. ProductCtrl.java 생성 (src/main/java -> com.myweb.ctrl)
+====================================================================================
+package com.myweb.ctrl;
+
+import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.myweb.domain.ProductVO;
+import com.myweb.service.ProductService;
+
+@Controller
+@RequestMapping("/Product/*")
+
+public class ProductCtrl {
+	private static final Logger log = LoggerFactory.getLogger(ProductController.class);
+	@Inject
+	private ProductService psv;
+	
+	@RequestMapping(value="/write", method=RequestMethod.GET)
+	public void write() {
+		log.info(">>> 상품 등록 페이지 출력 - GET");
+	}
+	
+	@RequestMapping(value="/write", method=RequestMethod.POST)
+	public String write(ProductVO pvo, @RequestParam("imgfile")String imgfile, RedirectAttributes reAttr) {
+		log.info(">>> 상품 등록 페이지 출력 - GET");
+		psv.write(pvo);
+		return "redict:/product/list";
+	}
+	
+	@RequestMapping(value="/list", method=RequestMethod.GET)
+	public void list(Model model) {
+		log.info(">>> 리스트 출력 - GET");
+	}
+====================================================================================
+
+3. list.jsp 생성 (views -> Product)
+ -> temp.jsp 열어둔 상태에서 File-> save as로  생성하면 temp.jsp 코드 내용 그대로 나타남
+====================================================================================
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+  pageEncoding="UTF-8"%>
+<jsp:include page="../00_header.jsp"></jsp:include>
+<jsp:include page="../10_nav.jsp"></jsp:include>
+<jsp:include page="../90_footer.jsp"></jsp:include>
+
+<h1>성공하였습니까?</h1>
+<script>
+	let result = '<c:out value="${result}" />';
+	if(result == 'Write_ok'){
+		alert("상품 등록이 완료되었습니다!");
+	}
+	result = "";
+</script>
+====================================================================================
+
+4. ProductMapper.xml
+★ <select>, <update> 부분에 sql코드  where pno = #{pno} 추가 
+★설명)   
+<sql id ="pno_cond"> 
+where pno #{pno}
+</sql>
+	.
+	.
+	.
+
+
+  <select id="detail" parameterType="java.lang.Integer" resultType="pvo">
+  		select*from str_product
+  		<include refid="pno_cond"/> 
+  </select>
+
+ => <sql~>부분코드를 추가하면 sql문 작성시 조건절이 길때, <include refid="pno_cond"/>  코드로 대체하여 간편해짐
+     현재 코드는 where pno=#{pno} 로 짧기 때문에 <include refid="pno_cond"/>는 주석처리 하였음
+====================================================================================
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+  <mapper namespace ="ProductMapper">
+  <sql id ="pno_cond">
+  where pno #{pno}
+  </sql>
+  <insert id="add" parameterType="pvo">
+  		insert into str_product
+  		values(sequence_product.nectval,
+  		#{title},
+  		#{content},
+  		#{writer},
+  		sysdate sysdate,
+  		sysdate sysdate,
+  		0,
+  		#{imgfile})
+  </insert>
+  
+  <select id="List" resultType="pvo">
+  		select pno,title,writer,content,modd8,reg8,readcount
+  		from str_product order by pno desc
+  </select>
+  
+  <select id="detail" parameterType="java.lang.Integer" resultType="pvo">
+  		select*from str_product
+  		where pno = #{pno}		<!-- <include refid="pno_cond"/> -->
+  </select>
+  
+  <update id="modify" parameterType="pvo">
+  		update str_product
+  		set title=#{title}, content=#{content}, modd8=sysdate, reg8=sysdate, imgfile=#{imgfile}
+  		where pno = #{pno}
+  </update>
+  
+  <delete id="remove" parameterType="java.lang.Integer">
+  		delete from str_product
+  		where pno=#{pno}
+  </delete>
+  </mapper>
+====================================================================================
+== log4j2.xml 수정
