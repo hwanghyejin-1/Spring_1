@@ -2,9 +2,6 @@ package com.myweb.domain;
 
 import java.sql.Date;
 
-import lombok.Data;
-
-@Data
 public class ProductVO {
 	private int pno;
 	private String title;
@@ -14,7 +11,6 @@ public class ProductVO {
 	private Date modd8;
 	private int readcount;
 	private String imgfile;
-	
 	public int getPno() {
 		return pno;
 	}

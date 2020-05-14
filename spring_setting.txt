@@ -1,4 +1,54 @@
-Spring 설치 후 기본 Setting
+★★개발을 위한 준비★★
+
+1. JDK 설치 
+https://gabii.tistory.com/entry/Java-Java-JDK-%EC%84%A4%EC%B9%98-%EB%B0%8F-%ED%99%98%EA%B2%BD%EC%84%A4%EC%A0%95
+
+2. STS 설치
+https://spring.io/tools
+
+->Looking for Spring Tool Suite 3? 이부분에서  
+->Find more information about version 3 of the Spring Tool Suite on the Spring Tool Suite 3 wiki including downloads, update site URLs, references to the new and noteworthy pages, and details of how to upgrade to Spring Tools 4.
+   => 구 버전으로 클릭 -> full distribution on Eclipse 4.12
+
+->https://download.springsource.com/release/STS/3.9.3.RELEASE/dist/e4.8/spring-tool-suite-3.9.3.RELEASE-e4.8.0-win32-x86_64.zip  
+url 위처럼 수정 -> Enter -> 다운로드
+
+3. oracle 11g xe 설치
+(1)oracle 11g xe 검색 , 클릭 -> 다운로드 클릭 -> 밑으로 내리면 prior Release~ 클릭 -> 다운로드
+https://www.oracle.com/database/technologies/xe-prior-releases.html
+
+(2) 시작 -> Run Sql Command Line -> 실행
+SQL> conn system/1234
+Connected.
+
+SQL> create user springdb identified by springuser;
+
+User created.
+
+SQL> grant connect, resource to springdb;
+
+Grant succeeded.
+
+
+4. Tomcat8 설치
+톰캣8 다운로드 -->64-bit Windows zip (pgp, sha512)
+
+5. dbeaver 설치
+구글 디비버 -> https://dbeaver.io/download/ 다운로드에서 windows 64bit (installer)말고!!!!!!!! windows 64bit (zip)다운로드!!!
+압축 _spring에 풀고 dbeaver 바로가기 생성 후, 따로 빼기
+
+데이터베이스 생성-> oracle
+(HOST=> localhost, Database=>xe하고 옆에 SID로 하기, username=>springdb, password=>springuser )하고
+비번 springuser
+edit drive...-> add file -> 경로(oraclexe->app->oracle->product->11.2.0->server->jdbc->lib->ojdbc6.jar)  생성되면 나머지는 다 삭제!!!
+생성, 
+driver class ->  find class 클릭 -> 두개중에 긴거 밑에꺼 클릭
+사진찍은거 참고하기 왼쪽에 test connection... 클릭-> 확인
+
+
+
+
+★★Spring 설치 후 기본 Setting★★
 
 1. 페이지 Setting
 
@@ -61,15 +111,31 @@ private static final Logger log = LoggerFactory.getLogger(여기 마우스 놓�
  : Spring Legacy Project 생성 후, 프로젝트 오른쪽 마우스 -> Properties -> Project Facets -> dynamic web module -> 원하는대로 버전 변경
   (Java 1.8로 변경) 
 
-★ src/main/java : 개발하는 Java 코드
-★ src/main/resources : 서버가 실행될 때 필요한 파일들의 경로
-★ src/test/java: 테스트 전용 경로
-★ src/test/resources: 테스트 시에만 사용되는 파일의 경로
-★ spring: 스프링 설정 파일의 경로
-★ views : JSP 파일 경로
-★ pom.xml : Maven 설정 파일
+★ src/main/java : 개발하는 Java 코드/ 작성되는 코드의 경로
+★ src/main/resources : 서버가 실행될 때 필요한 파일들의 경로(주로 설정 파일들을 넣음)
+★ src/test/java: 테스트 코드 전용 경로
+★ src/test/resources: 테스트 관련 설정 파일 보관 경로
 
-8. pom.xml 수정
+★ spring: 스프링 설정 파일의 경로
+★ servlet-context.xml : 웹과 관련된 스프링 설정 파일 
+★ root-context.xml : 스프링 설정 파일
+
+★ views : JSP 파일 경로
+★ web.xml : Tomcat의 web.xml 파일
+
+★ pom.xml : Maven이 사용하는 설정 파일
+
+8. 프로젝트의 JDBC 연결
+- SQL Developer를 설치했다면 설치 경로에 jdbc/lib 폴더에 ojdbc8.jar 파일 존재
+- SQL Developer를 설치하지 않았다면 데이터베이스가 설치된 폴더 내부에 jdbc/lib폴더에 ojdbc6.jar 파일 존재
+ 내 컴퓨터에는 (C:\oraclexe\app\oracle\product\11.2.0\server\jdbc\lib) 경로에 ojdbc6.jar 존재
+
+(1) 원하는 프로젝트 -> Properties -> Java Build path -> Add External JARs 
+   -> C:\oraclexe\app\oracle\product\11.2.0\server\jdbc\lib 경로에서 ojdbc6.jar 선택 -> Apply
+  => 해당 프로젝트에 Referenced Libraries 생성, 그 안에 ojdbc6.jar 생성
+(2) 원하는 프로젝트 -> Properties -> Deployment Assembly -> ojdbc6.jar -> Apply 
+
+9. pom.xml 수정
 (1) 버전 일치 확인
 =============================================================================================
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -117,7 +183,7 @@ private static final Logger log = LoggerFactory.getLogger(여기 마우스 놓�
 => spring-tx, spring-jdbc는 MyBatis 관련 라이브러리를 추가할때 필요하며.
     스프링에서 데이터베이스 처리와 트랜잭션 처리 역할을 함 (해당 라이브러리들은 MyBatis와 무관하게 보이지만 추가하지 않은 경우 에러 발생)
 
-9. 필요한 것 다운로드
+10. 필요한 것 다운로드
 
 ★ Google -> mavenrespository -> 홈페이지 들어가기 전, 글자 치는 란에 springjdbc 입력 -> 페이지 클릭 -> 각종 버전들 나옴
 ★(1)~(14)에 적어놓은 <version>수정도 확인하기 
@@ -567,11 +633,55 @@ private static final Logger log = LoggerFactory.getLogger(여기 마우스 놓�
 </project>
 =============================================================================================
 
-10. src/main/resources에서 log4j.xml -> 이름 log4j2.xml로 수정
-11. src/main/resources에서 new file -> log4jdbc.log4j2.properties 이름으로 생성
+11. JUnit 설정
+ 프로젝트 오른쪽마우스-> properties -> java build path -> libraries -> Add Libraries -> JUnit 선택 -> Apply
+
+12. JDBC 테스트 코드
+- src/test/java -> JDBCTests.java 생성 -> 데이터베이스 연결 가능한지 꼭 확인해야 함!
+ -> 데이터베이스 연결이 가능하다면 정상적으로 데이터베이스가 연결된 Connection 객체가 Console에 출력
+    ex) INFO : com.myweb.domain.JDBCTests - oracle.jdbc.driver.~~
+==========================================================================
+package com.myweb.ctrl;
+
+import static org.junit.Assert.fail;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class JDBCTests {
+	private static Logger log = LoggerFactory.getLogger(JDBCTests.class);
+	static {
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}	
+@Test
+public void testConnection() {
+	try(Connection con =
+			DriverManager.getConnection(
+					"jdbc:oracle:thin:@localhost:1521:XE",
+					"springdb",
+					"springuser")){
+		
+		log.info(">>> JDBC TEST>>>"+con);
+	}catch (Exception e) {
+		fail(e.getMessage());
+	}
+}
+}
+==========================================================================
+
+13. src/main/resources에서 log4j.xml -> 이름 log4j2.xml로 수정
+14. src/main/resources에서 new file -> log4jdbc.log4j2.properties 이름으로 생성
 => log4jdbc.spylogdelegator.name=net.sf.log4jdbc.log.slf4j.Slf4jSpyLogDelegator 코드 넣기
 
-12. src/main/resources에서 other file ->  MybatisConfig.xml 생성 -> 코드 넣기
+15. src/main/resources에서 other file ->  MybatisConfig.xml 생성 -> 코드 넣기
 =====================================
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
@@ -581,13 +691,7 @@ private static final Logger log = LoggerFactory.getLogger(여기 마우스 놓�
 </configuration> 
 =====================================
 
-13. oracle database 다운로드
-https://www.oracle.com/downloads/  -> 페이지 내리다보면 Drivers and Utilities에서 jdbc drivers -> oracle database 18c drivers -> ojdbc8.jar 다운 
- (1) ojdbc8.jar파일 C:\Program Files\Java\jdk1.8.0_251\lib에 넣기 ->  원하는 프로젝트 -> Properties->java build path -> library 
-    -> Add Externals Jars ->  C:\Program Files\Java\jdk1.8.0_251\lib경로의 ojdbc6.jar 클릭 -> apply ->regerenced libraries생성됨 -> 그안에 ojdbc8.jar 있음
- (2)원하는 프로젝트 -> Properties -> Deployment Assembly -> Add -> Java Build Path Entries -> objdbc8.jar -> Apply 
-
-14. web.xml 코드 수정
+16. web.xml 코드 수정
 -> </servlet-mapping> 코드 뒤에 붙여넣기
 ==========================================================================
 <filter>
@@ -604,7 +708,7 @@ https://www.oracle.com/downloads/  -> 페이지 내리다보면 Drivers and Util
   </filter-mapping>
 ==========================================================================
 
-15. root-context.xml 수정 --> 수정 시 404에러 (해결하기!)
+17. root-context.xml 수정 --> 수정 시 404에러 (해결하기!)
 <원래 코드>
 =================================================================================================
 <?xml version="1.0" encoding="UTF-8"?>

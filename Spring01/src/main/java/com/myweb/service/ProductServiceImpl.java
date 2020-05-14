@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.myweb.domain.ProductVO;
 import com.myweb.persistence.ProductDAO;
 
-@Service
+@Service("ProductService")
 public class ProductServiceImpl implements ProductService{
 	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 	
